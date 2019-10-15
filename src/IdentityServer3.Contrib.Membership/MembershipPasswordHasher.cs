@@ -1,6 +1,9 @@
 ﻿// This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+using IdentityServer3.Contrib.Membership.Helpers;
+
 namespace IdentityServer3.Contrib.Membership
 {
     using System;
@@ -11,6 +14,20 @@ namespace IdentityServer3.Contrib.Membership
     /// <summary>Membership Password Encrypt / Hasher</summary>
     public class MembershipPasswordHasher : IMembershipPasswordHasher
     {
+        private readonly string hashAlgorithmName;
+
+        public MembershipPasswordHasher(MembershipOptions options)
+        {
+            options.ThrowIfNull(nameof(options));
+            if (string.IsNullOrWhiteSpace(options.PasswordHashAlgorithmName))
+            {
+                var s = nameof(options.PasswordHashAlgorithmName);
+                throw new ArgumentException(s);
+            }
+            
+            hashAlgorithmName = options.PasswordHashAlgorithmName;
+        }
+        
         /// <summary>Encrypts a password using the given format and salt</summary>
         /// <param name="password">The password to encrypt / hash</param>
         /// <param name="passwordFormat">The format to use 0 = clear, 1 = encrypt, 2 = hash</param>
@@ -29,7 +46,7 @@ namespace IdentityServer3.Contrib.Membership
             if (passwordFormat == 1)
             {
                 // MembershipPasswordFormat.Hashed 
-                HashAlgorithm hm = HashAlgorithm.Create("SHA1");
+                HashAlgorithm hm = HashAlgorithm.Create(hashAlgorithmName);
                 if (hm is KeyedHashAlgorithm)
                 {
                     KeyedHashAlgorithm kha = (KeyedHashAlgorithm)hm;

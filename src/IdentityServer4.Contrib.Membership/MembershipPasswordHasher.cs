@@ -11,6 +11,18 @@ namespace IdentityServer4.Contrib.Membership
     /// <summary>Membership Password Encrypt / Hasher</summary>
     public class MembershipPasswordHasher : IMembershipPasswordHasher
     {
+        private readonly string hashAlgorithmName;
+
+        public MembershipPasswordHasher(MembershipOptions options)
+        {
+            if (string.IsNullOrWhiteSpace(options.PasswordHashAlgorithmName))
+            {
+                throw new ArgumentException(nameof(options.PasswordHashAlgorithmName));
+            }
+            
+            hashAlgorithmName = options.PasswordHashAlgorithmName;
+        }
+        
         /// <summary>Encrypts a password using the given format and salt</summary>
         /// <param name="password">The password to encrypt / hash</param>
         /// <param name="passwordFormat">The format to use 0 = clear, 1 = encrypt, 2 = hash</param>
@@ -28,7 +40,7 @@ namespace IdentityServer4.Contrib.Membership
 
             if (passwordFormat == 1)
             {
-                HashAlgorithm hm = SHA1.Create();
+                HashAlgorithm hm = HashAlgorithm.Create(hashAlgorithmName);
 
                 // MembershipPasswordFormat.Hashed                 
                 if (hm is KeyedHashAlgorithm)

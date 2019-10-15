@@ -13,6 +13,7 @@ namespace IdentityServer4.Contrib.Membership
             MaxInvalidPasswordAttempts = 5;
             PasswordAttemptWindow = 10;
             IdentityProvider = "idsvr";
+            PasswordHashAlgorithmName = "SHA1";
         }
 
         /// <summary>
@@ -45,5 +46,10 @@ namespace IdentityServer4.Contrib.Membership
         /// The Identity Provider
         /// </summary>
         public string IdentityProvider { get; set; }
+        
+        /// <summary>
+        /// The hash algorithm that will be used for the password hashing
+        /// </summary>
+        public string PasswordHashAlgorithmName { get; set; }
     }
 }
