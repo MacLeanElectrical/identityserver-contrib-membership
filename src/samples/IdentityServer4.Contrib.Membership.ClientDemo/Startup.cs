@@ -17,7 +17,7 @@ namespace IdentityServer4.Contrib.Membership.ClientDemo
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddMvc(mvc => mvc.EnableEndpointRouting = false);
 
             services.AddAuthentication(options =>
                 {
